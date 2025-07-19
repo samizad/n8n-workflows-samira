@@ -4,13 +4,10 @@ A collection of automation workflows built with n8n.
 
 ## Workflows
 
-- **level2_email_discord.json**  
+- **my_level2_workflow.json**  
   Workflow to fetch data, merge, send email, and post message to Discord.
-
-- **orders_batch_process.json**  
   Batching and processing orders in groups.
 
-...
 
 ## How to use
 
