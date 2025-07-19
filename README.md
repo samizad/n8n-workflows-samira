@@ -1,5 +1,19 @@
-# n8n Workflows
+# My n8n Workflows
 
-This repo contains my automation workflows for n8n.
+A collection of automation workflows built with n8n.
 
-- Import any workflow JSON into your n8n instance to use.
+## Workflows
+
+- **level2_email_discord.json**  
+  Workflow to fetch data, merge, send email, and post message to Discord.
+
+- **orders_batch_process.json**  
+  Batching and processing orders in groups.
+
+...
+
+## How to use
+
+1. Copy the JSON.
+2. In n8n UI, click "Import from clipboard".
+3. Paste the JSON and use the workflow!
