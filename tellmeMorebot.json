@@ -1,0 +1,285 @@
+{
+  "name": "tellmeMorebot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3bb5de9f-86c4-4455-80e1-5ec1fa829f43",
+      "name": "Telegram Trigger",
+      "webhookId": "f5a9ec47-068c-4816-9103-9c0cb964e8cc",
+      "credentials": {
+        "telegramApi": {
+          "id": "kMjdmBjyKkvqC4Jq",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=The user asked: {{ $('Telegram Trigger').item.json.message.text }}\nAnswer clearly and politely like a customer support agent.",
+              "role": "assistant"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b327eab1-232c-459b-a91e-0197b49a4b3d",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "qabA2WSAzt03NUO9",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "576e4c09-23be-47c0-bb21-071f6e8fb3a2",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "66269c79-193f-437d-aa4b-3ea87621e28f",
+              "name": "UserName",
+              "value": "={{ $json.message.chat.username }}",
+              "type": "string"
+            },
+            {
+              "id": "7c8f06de-bd7d-4dde-a760-3be9a5a7e46c",
+              "name": "chatID",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "cb846366-30dc-43a5-9f3d-a00f06e152ab",
+              "name": "firstname",
+              "value": "={{ $json.message.chat.first_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a5820914-35f1-4e78-a8ac-c3545c6091ea",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appH6slH208uhoKka",
+          "mode": "list",
+          "cachedResultName": "FirstBase",
+          "cachedResultUrl": "https://airtable.com/appH6slH208uhoKka"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblYgeGELyVie6tF5",
+          "mode": "list",
+          "cachedResultName": "chatbottbl",
+          "cachedResultUrl": "https://airtable.com/appH6slH208uhoKka/tblYgeGELyVie6tF5"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat ID": "={{ $node[\"Edit Fields\"].json[\"chatID\"] }}",
+            "Username": "={{ $node[\"Edit Fields\"].json[\"UserName\"] }}",
+            "GPT Response": "={{ $json[\"message\"][\"content\"] }}",
+            "Message": "={{ $node[\"Edit Fields\"].json[\"message\"][\"text\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Chat ID",
+              "displayName": "Chat ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "GPT Response",
+              "displayName": "GPT Response",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "c0809561-1e2c-4629-a110-1ebd294c1a4c",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "mpdEUKdn13UIgaXX",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Edit Fields\"].json[\"chatID\"] }}",
+        "text": "={{ $node[\"Message a model\"].json[\"message\"][\"content\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        0
+      ],
+      "id": "1dd19d6d-f1b0-4fd3-b165-3302c8310d89",
+      "name": "Send a text message",
+      "webhookId": "9a768eed-24fe-4ac3-adb8-71bc67aabebc",
+      "credentials": {
+        "telegramApi": {
+          "id": "kMjdmBjyKkvqC4Jq",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "69c486fd-1c84-4d41-9874-aed44fe8b4f4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "345d581d85777cce36d3de1a875e946b6d033e5c2f5250d68c6c71971f958c32"
+  },
+  "id": "fjqvGVQB2k2mxHUq",
+  "tags": []
+}
